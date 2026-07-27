@@ -76,3 +76,20 @@ def analyze_sentiment(text):
     return result["compound"] #returns the compound score which summarizes overall sentiment
 
 #print(analyze_sentiment("I love kyrie irving hes good at basketball"))
+
+def analyze_comments_sentiment(comments):
+    scored_comments = []
+    for comment in comments:
+        score = analyze_sentiment(comment)
+        #creating a list of dictionaries where each dictionary contains a comment and its sentiment score
+        scored_comments.append({"comment": comment, "score": score})
+
+    return scored_comments
+
+def analyze_articles_sentiment(articles):
+    for article in articles:
+        combined_text = f"{article['title']} + {article['description']}" #combined article title and description so I can compute one combined sentiment sore
+        score = analyze_sentiment(combined_text)
+        article["sentiment_score"] = score #adding a new key-value pair so we can keep other useful information in the dictonary
+
+
