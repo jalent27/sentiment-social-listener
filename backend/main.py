@@ -22,9 +22,14 @@ app.add_middleware(
 def analyze_topic(topic: str):
     news_data = fetch_news(topic)
     youtube_data = fetch_youtube_data(topic)
+    article_sentiment = analyze_articles_sentiment(news_data["articles"])
+    comments_sentiment = analyze_comments_sentiment(youtube_data)
 
-    return {"topic": topic, "articles": news_data["articles"], "youtube_comments": youtube_data}
-
+    return {
+    "topic": topic,
+    "articles": article_sentiment,
+    "youtube_comments": comments_sentiment
+}
 load_dotenv() # Loads the environment variables such as API keys from the .env file
 news_api_key = os.getenv("NEWS_API_KEY")
 youtube_api_key = os.getenv("YOUTUBE_API_KEY")
@@ -49,7 +54,7 @@ def search_yt_comments(video_id):
 
 def fetch_comments(video_id):
     comments_data = search_yt_comments(video_id)
-    print(comments_data)
+    #print(comments_data)
     comments = []
     for comment in comments_data["items"]:
         comments.append(comment["snippet"]["topLevelComment"]["snippet"]["textOriginal"]) 
@@ -88,8 +93,10 @@ def analyze_comments_sentiment(comments):
 
 def analyze_articles_sentiment(articles):
     for article in articles:
-        combined_text = f"{article['title']} + {article['description']}" #combined article title and description so I can compute one combined sentiment sore
+        combined_text = article['title'] + ". " + article['description'] #combined article title and description so I can compute one combined sentiment sore
         score = analyze_sentiment(combined_text)
         article["sentiment_score"] = score #adding a new key-value pair so we can keep other useful information in the dictonary
+
+    return articles
 
 
