@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-app = FastAPI()
 import os
 from dotenv import load_dotenv
 import requests
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+
+app = FastAPI()
 
 app.add_middleware(
     #CORSMiddleware is used to allow requests from the frontend (React) to the backend (FastAPI) without any CORS issues.
@@ -67,4 +69,10 @@ def fetch_youtube_data(topic): #ties together search_videos and fetch_comments
 
 #print(fetch_youtube_data("Lebron")) test
 
+analyzer = SentimentIntensityAnalyzer()
 
+def analyze_sentiment(text):
+    result = analyzer.polarity_scores(text)
+    return result["compound"] #returns the compound score which summarizes overall sentiment
+
+#print(analyze_sentiment("I love kyrie irving hes good at basketball"))
