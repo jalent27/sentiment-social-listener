@@ -4,6 +4,14 @@ import os
 from dotenv import load_dotenv
 import requests
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from supabase import create_client
+
+load_dotenv() # Loads the environment variables such as API keys from the .env file
+news_api_key = os.getenv("NEWS_API_KEY")
+youtube_api_key = os.getenv("YOUTUBE_API_KEY")
+supabase_url = os.getenv("SUPABASE_URL")
+supabase_key = os.getenv("SUPABASE_KEY")
+#creating api variables to store the api keys from the .env file
 
 app = FastAPI()
 
@@ -30,10 +38,6 @@ def analyze_topic(topic: str):
     "articles": article_sentiment,
     "youtube_comments": comments_sentiment
 }
-load_dotenv() # Loads the environment variables such as API keys from the .env file
-news_api_key = os.getenv("NEWS_API_KEY")
-youtube_api_key = os.getenv("YOUTUBE_API_KEY")
-#creating api variables to store the api keys from the .env file
 
 def fetch_news(topic):
     url = f"https://newsapi.org/v2/everything?q={topic}&apiKey={news_api_key}&language=en" #url of newsapi for a specific topic
@@ -98,5 +102,23 @@ def analyze_articles_sentiment(articles):
         article["sentiment_score"] = score #adding a new key-value pair so we can keep other useful information in the dictonary
 
     return articles
+
+supabase = create_client(supabase_url, supabase_key) #creating a supabase client to connect to the supabase database using the url and key from the .env file
+
+#print(supabase.table("posts").select("*").execute())
+
+def save_to_supabase(topic, content, score):
+    #saves the topic, articles, and comments to the supabase database
+    data = {
+        "topic": topic,
+        "content": content,
+        "sentiment_score": score
+    }
+    response = supabase.table("posts").insert(data).execute() #inserts data into supabase table
+
+    return response
+
+#save_to_supabase('test", "is awesome", 0.314)
+
 
 
