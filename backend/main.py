@@ -33,6 +33,11 @@ def analyze_topic(topic: str):
     article_sentiment = analyze_articles_sentiment(news_data["articles"])
     comments_sentiment = analyze_comments_sentiment(youtube_data)
 
+    for article in article_sentiment:
+        save_to_supabase(topic, article["title"] + ". " + article["description"], article["sentiment_score"])
+    for comments in comments_sentiment:
+        save_to_supabase(topic, comments["comment"], comments["score"])
+
     return {
     "topic": topic,
     "articles": article_sentiment,
@@ -118,7 +123,8 @@ def save_to_supabase(topic, content, score):
 
     return response
 
-#save_to_supabase('test", "is awesome", 0.314)
+#save_to_supabase("test", "is awesome", 0.314)
+
 
 
 
