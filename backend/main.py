@@ -65,10 +65,11 @@ def fetch_comments(video_id):
     comments_data = search_yt_comments(video_id)
     #print(comments_data)
     comments = []
-    for comment in comments_data["items"]:
-        comments.append(comment["snippet"]["topLevelComment"]["snippet"]["textOriginal"]) 
-        #storing comments of a specified video in a list. The comments are stored in the "textOriginal" field of the 
-        #"topLevelComment" object in the "snippet" object of each comment item.
+    if "items" in comments_data:
+        for comment in comments_data["items"]:
+            comments.append(comment["snippet"]["topLevelComment"]["snippet"]["textOriginal"]) 
+            #storing comments of a specified video in a list. The comments are stored in the "textOriginal" field of the 
+            #"topLevelComment" object in the "snippet" object of each comment item.
 
     return comments
 
