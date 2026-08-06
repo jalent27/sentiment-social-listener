@@ -4,7 +4,7 @@ import './App.css';
 import {useState} from "react";
 
 function App() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<any>(null);
   const [topic, setTopic] = useState("");
 
   async function getSentiment()
@@ -12,7 +12,10 @@ function App() {
     const response = await fetch(`http://127.0.0.1:8000/analyze/${topic}`)
     const result = await response.json();
     setData(result);
+    console.log(result);
   }
+
+
 
   return (
     <div>
@@ -23,10 +26,17 @@ function App() {
 
       <button onClick={getSentiment}>Get Sentiment</button>
       
-      {data && <p>{JSON.stringify(data)}</p>}
+      {data && (
+        <div>
+          <h2>Articles</h2>
+          {data.articles.map((article : any) => (
+            <p key={article.url}>{article.title} - Score: {article.sentiment_score}</p>
+          ))}
+        </div>
+      )}
+
     </div>
   )
-
 }
 
 export default App;
