@@ -46,7 +46,7 @@ def analyze_topic(topic: str):
 }
 
 def fetch_news(topic):
-    url = f"https://newsapi.org/v2/everything?q={topic}&apiKey={news_api_key}&language=en" #url of newsapi for a specific topic
+    url = f'https://newsapi.org/v2/everything?q="{topic}"&apiKey={news_api_key}&language=en' #url of newsapi for a specific topic
     response = requests.get(url) #gets the data from that url
     return response.json() #returns the data in json format
 
@@ -125,9 +125,12 @@ def save_to_supabase(topic, content, score):
         "content": content,
         "sentiment_score": score
     }
-    response = supabase.table("posts").insert(data).execute() #inserts data into supabase table
-
-    return response
+    try:
+        response = supabase.table("posts").insert(data).execute()
+        return response
+    except Exception as e:
+        print(f"Failed to save to Supabase: {e}")
+        return None
 
 #save_to_supabase("test", "is awesome", 0.314)
 
