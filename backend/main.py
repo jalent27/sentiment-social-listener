@@ -51,7 +51,7 @@ def fetch_news(topic):
     return response.json() #returns the data in json format
 
 def search_videos(topic):
-    url = f"https://www.googleapis.com/youtube/v3/search?part=snippet&q={topic}&type=video&maxResults=5&key={youtube_api_key}"
+    url = f'https://www.googleapis.com/youtube/v3/search?part=snippet&q="{topic}"&type=video&maxResults=5&key={youtube_api_key}'
     #url of youtube video search results for specified topic. maxResults is set to 5 for now but that can be changed
     response = requests.get(url)
     return response.json()
@@ -77,9 +77,11 @@ def fetch_comments(video_id):
 def fetch_youtube_data(topic): #ties together search_videos and fetch_comments
     video_results = search_videos(topic)
     all_comments = []
-    for item in video_results["items"]:
-        video_id = item["id"]["videoId"]
-        all_comments.extend(fetch_comments(video_id)) #creating master list of all comments from all videos for a topic
+    if "items" in video_results:
+        for item in video_results["items"]:
+            if "videoId" in item["id"]:
+                video_id = item["id"]["videoId"]
+                all_comments.extend(fetch_comments(video_id)) #creating master list of all comments from all videos for a topic
 
     return all_comments
 
