@@ -33,8 +33,9 @@ def analyze_topic(topic: str):
     article_sentiment = analyze_articles_sentiment(news_data["articles"])
     comments_sentiment = analyze_comments_sentiment(youtube_data)
 
+    #saving all the articles and comments to the supabase database
     for article in article_sentiment:
-        save_to_supabase(topic, article["title"] + ". " + article["description"], article["sentiment_score"])
+        save_to_supabase(topic, article['combined_text'], article["sentiment_score"])
     for comments in comments_sentiment:
         save_to_supabase(topic, comments["comment"], comments["score"])
 
@@ -65,7 +66,7 @@ def fetch_comments(video_id):
     comments_data = search_yt_comments(video_id)
     #print(comments_data)
     comments = []
-    if "items" in comments_data:
+    if "items" in comments_data: #if comments for this specific video exists, then the "items" key will be present in the comments_data dictionary. If it is not present, then there are no comments for this video.
         for comment in comments_data["items"]:
             comments.append(comment["snippet"]["topLevelComment"]["snippet"]["textOriginal"]) 
             #storing comments of a specified video in a list. The comments are stored in the "textOriginal" field of the 
@@ -103,9 +104,13 @@ def analyze_comments_sentiment(comments):
 
 def analyze_articles_sentiment(articles):
     for article in articles:
-        combined_text = article['title'] + ". " + article['description'] #combined article title and description so I can compute one combined sentiment sore
+        title = article['title'] or "" #if title is None, then set it to an empty string
+        description = article['description'] or "" #if description is None, then set it to an empty string
+
+        combined_text = title + ". " + description #combined article title and description so I can compute one combined sentiment sore
         score = analyze_sentiment(combined_text)
         article["sentiment_score"] = score #adding a new key-value pair so we can keep other useful information in the dictonary
+        article["combined_text"] = combined_text
 
     return articles
 
