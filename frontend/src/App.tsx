@@ -28,10 +28,15 @@ function App() {
       
       {data && (
         <div>
-          <h2>Articles</h2>
+          <h1>Articles</h1>
           {data.articles.map((article : any) => (
             <p key={article.url}>{article.title} - Score: {article.sentiment_score}</p>
           ))}
+
+          <h1>Youtube Comments</h1>
+          {data.youtube_comments.map((yt_comment: any, index: number) => (
+          <p key={index}>{yt_comment.comment} - Score: {yt_comment.score}</p>
+        ))}
         </div>
       )}
 
