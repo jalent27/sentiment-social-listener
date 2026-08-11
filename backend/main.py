@@ -39,10 +39,13 @@ def analyze_topic(topic: str):
     for comments in comments_sentiment:
         save_to_supabase(topic, comments["comment"], comments["score"])
 
+    sentiment_label, sentiment_score = calculate_overall_sentiment(article_sentiment, comments_sentiment)
     return {
     "topic": topic,
     "articles": article_sentiment,
-    "youtube_comments": comments_sentiment
+    "youtube_comments": comments_sentiment,
+    "overall_sentiment": sentiment_label,
+    "sentiment_score": sentiment_score
 }
 
 def fetch_news(topic):
@@ -136,6 +139,23 @@ def save_to_supabase(topic, content, score):
 
 #save_to_supabase("test", "is awesome", 0.314)
 
+def calculate_overall_sentiment(articles, comments):
+    scores = []
+    #appending all sentiment scores from articles and comments into one list
+    for article in articles:
+        scores.append(article["sentiment_score"])
+    for comment in comments:
+        scores.append(comment["score"])
 
+    total = sum(scores)
+    average_score = total / len(scores)
 
+    if(average_score > 0.05):
+        overall_sentiment = "positive"
+    elif(average_score < -0.05):
+        overall_sentiment = "negative"
+    else:
+        overall_sentiment = "neutral"
+
+    return overall_sentiment, average_score
 
