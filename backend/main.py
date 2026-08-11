@@ -40,6 +40,7 @@ def analyze_topic(topic: str):
         save_to_supabase(topic, comments["comment"], comments["score"])
 
     sentiment_label, sentiment_score = calculate_overall_sentiment(article_sentiment, comments_sentiment)
+    
     return {
     "topic": topic,
     "articles": article_sentiment,
