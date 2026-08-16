@@ -92,7 +92,7 @@ function App() {
               </RadialBarChart>
               <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", textAlign: "center" }}>
                 <div style={{ fontWeight: "bold", fontSize: "20px" }}>
-                  {(data.sentiment_comparison.comments_avg * 50).toFixed(1)}
+                  {((data.sentiment_comparison.comments_avg + 1) * 50).toFixed(1)}
                 </div>
                 <div style={{ fontSize: "12px" }}>Comments</div>
               </div>

@@ -194,8 +194,14 @@ def calculate_sentiment_comparison(articles, comments): #This function compares 
     for comment in comments:
         comment_scores.append(comment["score"])
 
-    article_average = sum(article_scores) / len(article_scores)
-    comment_average = sum(comment_scores) / len(comment_scores)
+    if article_scores:
+        article_average = sum(article_scores) / len(article_scores)
+    else:
+        article_average = 0
+    if comment_scores:
+        comment_average = sum(comment_scores) / len(comment_scores)
+    else:
+        comment_average = 0
 
     return {"articles_avg": article_average, "comments_avg": comment_average}
 
