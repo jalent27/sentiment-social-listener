@@ -41,6 +41,8 @@ def analyze_topic(topic: str):
 
     sentiment_label, sentiment_score = calculate_overall_sentiment(article_sentiment, comments_sentiment)
     breakdown = calculate_sentiment_breakdown(article_sentiment, comments_sentiment)
+
+    sentiment_comparison = calculate_sentiment_comparison(article_sentiment, comments_sentiment)
     
     return {
     "topic": topic,
@@ -48,7 +50,8 @@ def analyze_topic(topic: str):
     "youtube_comments": comments_sentiment,
     "overall_sentiment": sentiment_label,
     "sentiment_score": sentiment_score,
-    "sentiment_breakdown": breakdown
+    "sentiment_breakdown": breakdown,
+    "sentiment_comparison": sentiment_comparison
 }
 
 def fetch_news(topic):
@@ -182,7 +185,19 @@ def calculate_sentiment_breakdown(articles, comments): #this function will split
             {"name": "Negative", "value": negative}
             ]
 
+def calculate_sentiment_comparison(articles, comments): #This function compares the average sentiment of articles vs comments
+    article_scores = []
+    comment_scores = []
+    for article in articles:
+        article_scores.append(article["sentiment_score"])
 
+    for comment in comments:
+        comment_scores.append(comment["score"])
+
+    article_average = sum(article_scores) / len(article_scores)
+    comment_average = sum(comment_scores) / len(comment_scores)
+
+    return {"articles_avg": article_average, "comments_avg": comment_average}
 
 
 
