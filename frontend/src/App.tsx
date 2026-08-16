@@ -2,6 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import {useState} from "react";
+import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 
 function App() {
   const [data, setData] = useState<any>(null);
@@ -30,9 +31,23 @@ function App() {
         <div>
           <h1>Overall Sentiment: {data.overall_sentiment} Score: {data.sentiment_score}</h1>
           <h1>Sentiment Distribution</h1>
-          {data.sentiment_breakdown.map((item: any) => (
-            <p key={item.name}>{item.name}: {item.value}</p>
-          ))} 
+          <PieChart width={400} height={400}>
+            <Pie
+              data={data.sentiment_breakdown}
+              dataKey = "value"
+              nameKey = "name"
+              cx = "50%"
+              cy = "50%"
+              outerRadius={100}
+              label
+            >
+              <Cell fill="#4caf50" />
+              <Cell fill="#8f9198" />
+              <Cell fill="#e83838" />
+            </Pie>
+            <Tooltip />
+            <Legend />
+          </PieChart>
           <h1>Articles</h1>
           {data.articles.map((article : any) => (
             <p key={article.url}>{article.title} - Score: {article.sentiment_score}</p>
