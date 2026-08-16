@@ -51,7 +51,7 @@ function App() {
           </PieChart>
 
           <h1>Articles vs. Comments</h1>
-          <div style={{ display: "flex", gap: "60px", justifyContent: "center" }}>
+          <div style={{ display: "flex", gap: "60px", justifyContent: "left" }}>
             <div style={{ position: "relative", width: 150, height: 150 }}>
               <RadialBarChart
                 width={150}
