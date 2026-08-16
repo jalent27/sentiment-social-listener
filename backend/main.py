@@ -40,7 +40,7 @@ def analyze_topic(topic: str):
         save_to_supabase(topic, comments["comment"], comments["score"])
 
     sentiment_label, sentiment_score = calculate_overall_sentiment(article_sentiment, comments_sentiment)
-    positive, neutral, negative = calculate_sentiment_breakdown(article_sentiment, comments_sentiment)
+    breakdown = calculate_sentiment_breakdown(article_sentiment, comments_sentiment)
     
     return {
     "topic": topic,
@@ -48,9 +48,7 @@ def analyze_topic(topic: str):
     "youtube_comments": comments_sentiment,
     "overall_sentiment": sentiment_label,
     "sentiment_score": sentiment_score,
-    "positive_count": positive,
-    "neutral_count": neutral,
-    "negative_count": negative
+    "sentiment_breakdown": breakdown
 }
 
 def fetch_news(topic):
@@ -179,7 +177,10 @@ def calculate_sentiment_breakdown(articles, comments): #this function will split
             negative += 1
         else:
             neutral += 1
-    return positive, neutral, negative
+    return [{"name": "Positive", "value": positive}, 
+            {"name": "Neutral", "value": neutral}, 
+            {"name": "Negative", "value": negative}
+            ]
 
 
 
