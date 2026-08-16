@@ -29,6 +29,7 @@ function App() {
       {data && (
         <div>
           <h1>Overall Sentiment: {data.overall_sentiment} Score: {data.sentiment_score}</h1>
+          <h1>Sentiment Distribution - Positive: {data.positive_count}, Neutral: {data.neutral_count}, Negative: {data.negative_count}</h1>
           <h1>Articles</h1>
           {data.articles.map((article : any) => (
             <p key={article.url}>{article.title} - Score: {article.sentiment_score}</p>

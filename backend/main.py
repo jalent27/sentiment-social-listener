@@ -40,13 +40,17 @@ def analyze_topic(topic: str):
         save_to_supabase(topic, comments["comment"], comments["score"])
 
     sentiment_label, sentiment_score = calculate_overall_sentiment(article_sentiment, comments_sentiment)
+    positive, neutral, negative = calculate_sentiment_breakdown(article_sentiment, comments_sentiment)
     
     return {
     "topic": topic,
     "articles": article_sentiment,
     "youtube_comments": comments_sentiment,
     "overall_sentiment": sentiment_label,
-    "sentiment_score": sentiment_score
+    "sentiment_score": sentiment_score,
+    "positive_count": positive,
+    "neutral_count": neutral,
+    "negative_count": negative
 }
 
 def fetch_news(topic):
@@ -93,13 +97,13 @@ def fetch_youtube_data(topic): #ties together search_videos and fetch_comments
 
 analyzer = SentimentIntensityAnalyzer()
 
-def analyze_sentiment(text):
+def analyze_sentiment(text): #this function uses vader to analze sentiment of a given text
     result = analyzer.polarity_scores(text)
     return result["compound"] #returns the compound score which summarizes overall sentiment
 
 #print(analyze_sentiment("I love kyrie irving hes good at basketball"))
 
-def analyze_comments_sentiment(comments):
+def analyze_comments_sentiment(comments): #this function analyzes sentiment of comments.
     scored_comments = []
     for comment in comments:
         score = analyze_sentiment(comment)
@@ -108,7 +112,7 @@ def analyze_comments_sentiment(comments):
 
     return scored_comments
 
-def analyze_articles_sentiment(articles):
+def analyze_articles_sentiment(articles): #this function analyzes sentiment of articles
     for article in articles:
         title = article['title'] or "" #if title is None, then set it to an empty string
         description = article['description'] or "" #if description is None, then set it to an empty string
@@ -140,7 +144,7 @@ def save_to_supabase(topic, content, score):
 
 #save_to_supabase("test", "is awesome", 0.314)
 
-def calculate_overall_sentiment(articles, comments):
+def calculate_overall_sentiment(articles, comments): #this function calculates overall sentiment scores based on articles and comments.
     scores = []
     #appending all sentiment scores from articles and comments into one list
     for article in articles:
@@ -159,4 +163,25 @@ def calculate_overall_sentiment(articles, comments):
         overall_sentiment = "neutral"
 
     return overall_sentiment, average_score
+
+def calculate_sentiment_breakdown(articles, comments): #this function will split comments and articles into 3 categories: positive, neutral, and negative. Meant to be displayed as a piechart.
+    scores = []
+    for article in articles:
+        scores.append(article["sentiment_score"])
+    for comment in comments:
+        scores.append(comment["score"])
+
+    positive, neutral, negative = 0, 0, 0
+    for score in scores:
+        if score > 0.05:
+            positive += 1
+        elif score < -0.05:
+            negative += 1
+        else:
+            neutral += 1
+    return positive, neutral, negative
+
+
+
+
 
