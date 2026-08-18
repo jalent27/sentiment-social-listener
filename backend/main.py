@@ -43,6 +43,9 @@ def analyze_topic(topic: str):
     breakdown = calculate_sentiment_breakdown(article_sentiment, comments_sentiment)
 
     sentiment_comparison = calculate_sentiment_comparison(article_sentiment, comments_sentiment)
+
+    highest_articles, lowest_articles = find_top_sentiment_values(article_sentiment, "sentiment_score")
+    highest_comments, lowest_comments = find_top_sentiment_values(comments_sentiment, "score")
     
     return {
     "topic": topic,
@@ -51,7 +54,11 @@ def analyze_topic(topic: str):
     "overall_sentiment": sentiment_label,
     "sentiment_score": sentiment_score,
     "sentiment_breakdown": breakdown,
-    "sentiment_comparison": sentiment_comparison
+    "sentiment_comparison": sentiment_comparison,
+    "highest_articles": highest_articles,
+    "lowest_articles": lowest_articles,
+    "highest_comments": highest_comments,
+    "lowest_comments": lowest_comments
 }
 
 def fetch_news(topic):
@@ -204,6 +211,15 @@ def calculate_sentiment_comparison(articles, comments): #This function compares 
         comment_average = 0
 
     return {"articles_avg": article_average, "comments_avg": comment_average}
+
+def find_top_sentiment_values(scores, score_key, n = 3): #this function finds the top n and lowest n sentiment scores
+    sorted_scores = sorted(scores, key = lambda item: item[score_key], reverse = False)
+    top_n = sorted_scores[-n:] #top n sentiment scores
+    lowest_n = sorted_scores[:n] #lowest n sentiment scores
+
+    return top_n, lowest_n
+
+
 
 
 
