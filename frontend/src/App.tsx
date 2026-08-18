@@ -99,6 +99,27 @@ function App() {
             </div>
           </div>
 
+          <h1>Top 3 Highest Articles</h1>
+          {data.highest_articles.map((article: any) => (
+            <p key={article.url}>{article.title} - Score: {article.sentiment_score}</p>
+          ))}
+
+          <h1>Top 3 Lowest Articles</h1>
+          {data.lowest_articles.map((article: any) => (
+            <p key={article.url}>{article.title} - Score: {article.sentiment_score}</p>
+          ))}
+
+          <h1>Top 3 Positive Comments</h1>
+          {data.highest_comments.map((comment: any, index: number) => (
+            <p key={index}>{comment.comment} - Score: {comment.score}</p>
+          ))}
+
+          <h1>Top 3 Negative Comments</h1>
+          {data.lowest_comments.map((comment: any, index: number) => (
+            <p key={index}>{comment.comment} - Score: {comment.score}</p>
+          ))}
+          
+
           <h1>Articles</h1>
           {data.articles.map((article : any) => (
             <p key={article.url}>{article.title} - Score: {article.sentiment_score}</p>
