@@ -40,12 +40,24 @@ def analyze_topic(topic: str):
         save_to_supabase(topic, comments["comment"], comments["score"])
 
     sentiment_label, sentiment_score = calculate_overall_sentiment(article_sentiment, comments_sentiment)
+
+    #Creating categories of the data to make pie chart graph
     breakdown = calculate_sentiment_breakdown(article_sentiment, comments_sentiment)
 
+    #compares sentiment score average of articles vs comments
     sentiment_comparison = calculate_sentiment_comparison(article_sentiment, comments_sentiment)
 
+    #finding top 3 and lowest 3 sentiment scores for articles and comments
     highest_articles, lowest_articles = find_top_sentiment_values(article_sentiment, "sentiment_score")
     highest_comments, lowest_comments = find_top_sentiment_values(comments_sentiment, "score")
+
+    #creating data distribution for histogram of sentiment scores
+    comments_scores = [comment["score"] for comment in comments_sentiment]
+    article_scores = [article["sentiment_score"] for article in article_sentiment]
+
+
+    histogram_data_comments = build_histogram(comments_scores)
+    histogram_data_articles = build_histogram(article_scores)
     
     return {
     "topic": topic,
@@ -58,7 +70,10 @@ def analyze_topic(topic: str):
     "highest_articles": highest_articles,
     "lowest_articles": lowest_articles,
     "highest_comments": highest_comments,
-    "lowest_comments": lowest_comments
+    "lowest_comments": lowest_comments,
+    "histogram_data_comments": histogram_data_comments,
+    "histogram_data_articles": histogram_data_articles
+
 }
 
 def fetch_news(topic):
@@ -219,6 +234,19 @@ def find_top_sentiment_values(scores, score_key, n = 3): #this function finds th
 
     return top_n, lowest_n
 
+def build_histogram(scores): #this function builds a histogram of sentiment scores
+    
+    bins = [(-1.0, -0.8), (-0.8, -0.6), (-0.6, -0.4), (-0.4, -0.2), (-0.2, 0.0), (0.0, 0.2), (0.2, 0.4), (0.4, 0.6), (0.6, 0.8), (0.8, 1.0)]
+
+    histogram = []
+    for low, high in bins:
+        count = 0
+        for score in scores:
+            if low <= score <= high:
+                count += 1
+        histogram.append({"range": f"{low} to {high}", "count": count})
+
+    return histogram
 
 
 
