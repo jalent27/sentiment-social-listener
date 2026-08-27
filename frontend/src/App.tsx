@@ -2,7 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import {useState} from "react";
-import { PieChart, Pie, Cell, Tooltip, Legend, RadialBarChart, RadialBar } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, Tooltip, Legend, RadialBarChart, RadialBar } from "recharts";
 
 function App() {
   const [data, setData] = useState<any>(null);
@@ -128,8 +128,25 @@ function App() {
           <h1>Youtube Comments</h1>
           {data.youtube_comments.map((yt_comment: any, index: number) => (
           <p key={index}>{yt_comment.comment} - Score: {yt_comment.score}</p>
-        ))}
+          ))}
+
+          <h1>Histogram Data - Articles</h1>
+          <BarChart width={500} height = {300} data={data.histogram_data_articles}>
+            <XAxis dataKey = "range" angle = {-45} textAnchor = "end" height = {80}/>
+            <YAxis />
+            <Bar dataKey = "count" fill = "#98d1d8" />
+            <Tooltip />
+          </BarChart>
+
+          <h1>Histogram Data - Comments</h1>
+          <BarChart width={500} height = {300} data={data.histogram_data_comments}>
+            <XAxis dataKey = "range" angle = {-45} textAnchor = "end" height = {80}/>
+            <YAxis />
+            <Bar dataKey = "count" fill = "#5717c6" />
+            <Tooltip />
+          </BarChart>
         </div>
+        
       )}
 
     </div>
