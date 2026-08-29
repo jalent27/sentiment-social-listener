@@ -16,139 +16,155 @@ function App() {
     console.log(result);
   }
 
-
-
   return (
-    <div>
-      <input
-        value = {topic}
-        onChange={(e) => setTopic(e.target.value)}
-      />
+    <div className="app-container">
+      <h1 className="app-title">SOCIAL SENTIMENT ANALYZER</h1>
 
-      <button onClick={getSentiment}>Get Sentiment</button>
-      
+      <div className="search-row">
+        <input
+          className="search-input"
+          placeholder="Search a topic..."
+          value={topic}
+          onChange={(e) => setTopic(e.target.value)}
+        />
+        <button className="search-button" onClick={getSentiment}>➤</button>
+      </div>
+
       {data && (
-        <div>
-          <h1>Overall Sentiment: {data.overall_sentiment} Score: {data.sentiment_score}</h1>
-
-          <h1>Sentiment Distribution</h1>
-          <PieChart width={400} height={400}>
-            <Pie
-              data={data.sentiment_breakdown}
-              dataKey = "value"
-              nameKey = "name"
-              cx = "50%"
-              cy = "50%"
-              outerRadius={100}
-              label
-            >
-              <Cell fill="#4caf50" />
-              <Cell fill="#8f9198" />
-              <Cell fill="#e83838" />
-            </Pie>
-            <Tooltip />
-            <Legend />
-          </PieChart>
-
-          <h1>Articles vs. Comments</h1>
-          <div style={{ display: "flex", gap: "60px", justifyContent: "left" }}>
-            <div style={{ position: "relative", width: 150, height: 150 }}>
-              <RadialBarChart
-                width={150}
-                height={150}
-                cx="50%"
-                cy="50%"
-                innerRadius="70%"
-                outerRadius="100%"
-                barSize={10}
-                data={[{ value: (data.sentiment_comparison.articles_avg + 1) * 50, fill: "#4caf50" }]}
-                startAngle={90}
-                endAngle={-270}
-              >
-                <RadialBar dataKey="value" background cornerRadius={10} />
-              </RadialBarChart>
-              <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", textAlign: "center" }}>
-                <div style={{ fontWeight: "bold", fontSize: "20px" }}>
-                  {((data.sentiment_comparison.articles_avg + 1) * 50).toFixed(1)}
-                </div>
-                <div style={{ fontSize: "12px" }}>Articles</div>
+        <>
+          <div className="section bubble-row">
+            <div className="score-bubble-wrap">
+              <div className="score-bubble">
+                {((data.sentiment_score + 1) * 50).toFixed(1)}
               </div>
+              <div className="score-label">Overall Sentiment Score (0–100)</div>
             </div>
 
-            <div style={{ position: "relative", width: 150, height: 150 }}>
-              <RadialBarChart
-                width={150}
-                height={150}
-                cx="50%"
-                cy="50%"
-                innerRadius="70%"
-                outerRadius="100%"
-                barSize={10}
-                data={[{ value: (data.sentiment_comparison.comments_avg + 1) * 50, fill: "#2196f3" }]}
-                startAngle={90}
-                endAngle={-270}
-              >
-                <RadialBar dataKey="value" background cornerRadius={10} />
-              </RadialBarChart>
-              <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", textAlign: "center" }}>
-                <div style={{ fontWeight: "bold", fontSize: "20px" }}>
-                  {((data.sentiment_comparison.comments_avg + 1) * 50).toFixed(1)}
-                </div>
-                <div style={{ fontSize: "12px" }}>Comments</div>
+            <div className="speech-bubble">
+              The sentiment of this topic was <strong>{data.overall_sentiment}</strong>.
+            </div>
+          </div>
+
+          <div className="section">
+            <div className="section-title">Sentiment Distribution</div>
+            <div className="card-row">
+              <div className="card">
+                <PieChart width={400} height={400}>
+                  <Pie
+                    data={data.sentiment_breakdown}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={100}
+                    label
+                  >
+                    <Cell fill="#4caf50" />
+                    <Cell fill="#8f9198" />
+                    <Cell fill="#e83838" />
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
               </div>
             </div>
           </div>
 
-          <h1>Top 3 Highest Articles</h1>
-          {data.highest_articles.map((article: any) => (
-            <p key={article.url}>{article.title} - Score: {article.sentiment_score}</p>
-          ))}
+          <div className="section">
+            <div className="section-title">Articles vs. Comments</div>
+            <div className="bubble-row">
+              <div className="score-bubble-wrap">
+                <div className="score-bubble" style={{ borderColor: "#4caf50" }}>
+                  {((data.sentiment_comparison.articles_avg + 1) * 50).toFixed(1)}
+                </div>
+                <div className="score-label">Articles Sentiment Score (0–100)</div>
+              </div>
+              <div className="score-bubble-wrap">
+                <div className="score-bubble" style={{ borderColor: "#2196f3" }}>
+                  {((data.sentiment_comparison.comments_avg + 1) * 50).toFixed(1)}
+                </div>
+                <div className="score-label">Comments Sentiment Score (0–100)</div>
+              </div>
+            </div>
+          </div>
 
-          <h1>Top 3 Lowest Articles</h1>
-          {data.lowest_articles.map((article: any) => (
-            <p key={article.url}>{article.title} - Score: {article.sentiment_score}</p>
-          ))}
+          <div className="section">
+            <div className="section-title">Histogram Distribution</div>
+            <div className="card-row">
+              <div className="card">
+                <BarChart width={350} height={250} data={data.histogram_data_articles}>
+                  <XAxis dataKey="range" angle={-45} textAnchor="end" height={80} />
+                  <YAxis />
+                  <Bar dataKey="count" fill="#4caf50" />
+                  <Tooltip />
+                </BarChart>
+              </div>
+              <div className="card">
+                <BarChart width={350} height={250} data={data.histogram_data_comments}>
+                  <XAxis dataKey="range" angle={-45} textAnchor="end" height={80} />
+                  <YAxis />
+                  <Bar dataKey="count" fill="#2196f3" />
+                  <Tooltip />
+                </BarChart>
+              </div>
+            </div>
+          </div>
 
-          <h1>Top 3 Positive Comments</h1>
-          {data.highest_comments.map((comment: any, index: number) => (
-            <p key={index}>{comment.comment} - Score: {comment.score}</p>
-          ))}
+          <div className="section">
+            <div className="section-title">Highest &amp; Lowest Sentiment Articles</div>
+            <div className="card-row">
+              <div className="card">
+                <h3>Top 3 Highest</h3>
+                {data.highest_articles.map((article: any) => (
+                  <p key={article.url}>{article.title} - Score: {article.sentiment_score}</p>
+                ))}
+              </div>
+              <div className="card">
+                <h3>Top 3 Lowest</h3>
+                {data.lowest_articles.map((article: any) => (
+                  <p key={article.url}>{article.title} - Score: {article.sentiment_score}</p>
+                ))}
+              </div>
+            </div>
+          </div>
 
-          <h1>Top 3 Negative Comments</h1>
-          {data.lowest_comments.map((comment: any, index: number) => (
-            <p key={index}>{comment.comment} - Score: {comment.score}</p>
-          ))}
-          
+          <div className="section">
+            <div className="section-title">Highest &amp; Lowest Sentiment Comments</div>
+            <div className="card-row">
+              <div className="card">
+                <h3>Top 3 Positive</h3>
+                {data.highest_comments.map((comment: any, index: number) => (
+                  <p key={index}>{comment.comment} - Score: {comment.score}</p>
+                ))}
+              </div>
+              <div className="card">
+                <h3>Top 3 Negative</h3>
+                {data.lowest_comments.map((comment: any, index: number) => (
+                  <p key={index}>{comment.comment} - Score: {comment.score}</p>
+                ))}
+              </div>
+            </div>
+          </div>
 
-          <h1>Articles</h1>
-          {data.articles.map((article : any) => (
-            <p key={article.url}>{article.title} - Score: {article.sentiment_score}</p>
-          ))}
+          <div className="section">
+            <div className="section-title">All Articles</div>
+            <div className="card">
+              {data.articles.map((article: any) => (
+                <p key={article.url}>{article.title} - Score: {article.sentiment_score}</p>
+              ))}
+            </div>
+          </div>
 
-          <h1>Youtube Comments</h1>
-          {data.youtube_comments.map((yt_comment: any, index: number) => (
-          <p key={index}>{yt_comment.comment} - Score: {yt_comment.score}</p>
-          ))}
-
-          <h1>Histogram Data - Articles</h1>
-          <BarChart width={500} height = {300} data={data.histogram_data_articles}>
-            <XAxis dataKey = "range" angle = {-45} textAnchor = "end" height = {80}/>
-            <YAxis />
-            <Bar dataKey = "count" fill = "#98d1d8" />
-            <Tooltip />
-          </BarChart>
-
-          <h1>Histogram Data - Comments</h1>
-          <BarChart width={500} height = {300} data={data.histogram_data_comments}>
-            <XAxis dataKey = "range" angle = {-45} textAnchor = "end" height = {80}/>
-            <YAxis />
-            <Bar dataKey = "count" fill = "#5717c6" />
-            <Tooltip />
-          </BarChart>
-        </div>
-        
+          <div className="section">
+            <div className="section-title">All YouTube Comments</div>
+            <div className="card">
+              {data.youtube_comments.map((yt_comment: any, index: number) => (
+                <p key={index}>{yt_comment.comment} - Score: {yt_comment.score}</p>
+              ))}
+            </div>
+          </div>
+        </>
       )}
-
     </div>
   )
 }
