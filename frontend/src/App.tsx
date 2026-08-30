@@ -61,8 +61,7 @@ function App() {
             </div>
 
             <div className="speech-bubble">
-              The sentiment of this topic was <strong>{data.overall_sentiment}</strong>. 
-              {data.ai_summary}
+              The sentiment of this topic was <strong>{data.overall_sentiment}</strong>. {data.ai_summary}
             </div>
           </div>
 
