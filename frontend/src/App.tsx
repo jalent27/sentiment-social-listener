@@ -33,7 +33,11 @@ function App() {
         <button className="search-button" onClick={getSentiment}>➤</button>
       </div>
 
-      {loading && <div className="loading-text"> Loading... </div>}
+      {loading && <div className="loading-text">
+        <div className="spinner"></div>
+        <p>Analyzing sentiment...</p>
+      </div>}
+
       {data && (
         <>
           <div className="section bubble-row">

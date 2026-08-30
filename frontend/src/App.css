@@ -129,3 +129,24 @@ body {
   flex-wrap: wrap;
   justify-content: center;
 }
+
+.loading-text {
+  text-align: center;
+  margin: 40px 0;
+  font-size: 15px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 6px solid #dde3f5;
+  border-top: 6px solid #1e3a8a;
+  border-radius: 50%;
+  margin: 0 auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
