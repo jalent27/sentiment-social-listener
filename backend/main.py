@@ -88,13 +88,13 @@ def analyze_topic(topic: str):
 }
 
 def fetch_news(topic):
-    url = f'https://newsapi.org/v2/everything?qInTitle="{topic}"&apiKey={news_api_key}&language=en' #url of newsapi for a specific topic
+    url = f'https://newsapi.org/v2/everything?qInTitle="{topic}"&apiKey={news_api_key}&language=en&pageSize=40' #url of newsapi for a specific topic, set to 40 articles right now
     response = requests.get(url) #gets the data from that url
     return response.json() #returns the data in json format
 
 def search_videos(topic):
-    url = f'https://www.googleapis.com/youtube/v3/search?part=snippet&q="{topic}"&type=video&maxResults=5&key={youtube_api_key}'
-    #url of youtube video search results for specified topic. maxResults is set to 5 for now but that can be changed
+    url = f'https://www.googleapis.com/youtube/v3/search?part=snippet&q="{topic}"&type=video&maxResults=8&key={youtube_api_key}'
+    #url of youtube video search results for specified topic. maxResults is set to 8 for now but that can be changed
     response = requests.get(url)
     return response.json()
 
