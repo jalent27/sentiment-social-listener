@@ -5,12 +5,14 @@ from dotenv import load_dotenv
 import requests
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from supabase import create_client
+import anthropic
 
 load_dotenv() # Loads the environment variables such as API keys from the .env file
 news_api_key = os.getenv("NEWS_API_KEY")
 youtube_api_key = os.getenv("YOUTUBE_API_KEY")
 supabase_url = os.getenv("SUPABASE_URL")
 supabase_key = os.getenv("SUPABASE_KEY")
+claude_key = os.getenv("CLAUDE_API_KEY")
 #creating api variables to store the api keys from the .env file
 
 app = FastAPI()
@@ -55,9 +57,17 @@ def analyze_topic(topic: str):
     comments_scores = [comment["score"] for comment in comments_sentiment]
     article_scores = [article["sentiment_score"] for article in article_sentiment]
 
-
+    #building histogram data for comments and articles
     histogram_data_comments = build_histogram(comments_scores)
     histogram_data_articles = build_histogram(article_scores)
+
+    #generating AI summary
+    try:
+        ai_summary = generate_ai_summary(topic, highest_articles, lowest_articles, highest_comments, lowest_comments, sentiment_label, sentiment_score)
+    except Exception as e:
+        print(f"Failed to generate AI Summary: {e}")
+        ai_summary = "AI Summary unavailable at this time"
+
     
     return {
     "topic": topic,
@@ -72,7 +82,8 @@ def analyze_topic(topic: str):
     "highest_comments": highest_comments,
     "lowest_comments": lowest_comments,
     "histogram_data_comments": histogram_data_comments,
-    "histogram_data_articles": histogram_data_articles
+    "histogram_data_articles": histogram_data_articles,
+    "ai_summary": ai_summary
 
 }
 
@@ -248,6 +259,32 @@ def build_histogram(scores): #this function builds a histogram of sentiment scor
 
     return histogram
 
+claude_client = anthropic.Anthropic(api_key=claude_key) #creating a client for the claude api using the key from the .env file
+
+def generate_ai_summary(topic, highest_articles, lowest_articles, highest_comments, lowest_comments, overall_sentiment, sentiment_score): #this function generates a summary of the articles and comments using the claude api
+    examples_text = ""
+
+    #creating a string of the top and lowest articles/comments for claude api to analyze
+    for article in highest_articles + lowest_articles:
+        examples_text += f"- Article: {article['combined_text']}\n Sentiment Score: {article['sentiment_score']}\n"
+    for comment in highest_comments + lowest_comments:
+        examples_text += f"- Comment: {comment['comment']}\n Sentiment Score: {comment['score']}\n"
+
+    prompt = f"""You are analyzing public sentiment about '{topic}'. The overall sentiment is {overall_sentiment} (score: {sentiment_score}).
+
+    Below are sample articles and comments — some of the most positive and most negative in the dataset:
+
+    {examples_text}
+
+    Based on their actual content, explain in 2-3 sentences why the sentiment is trending this way. Be specific about what themes or events in the text are driving the sentiment, rather than restating the score."""
+    
+    response = claude_client.messages.create(
+        model="claude-haiku-4-5",
+        max_tokens=300,
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    return response.content[0].text
 
 
 
