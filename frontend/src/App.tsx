@@ -7,12 +7,15 @@ import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, Tooltip, Legend, Radi
 function App() {
   const [data, setData] = useState<any>(null);
   const [topic, setTopic] = useState("");
+  const [loading, setIsLoading] = useState(false);
 
   async function getSentiment()
   {
+    setIsLoading(true);
     const response = await fetch(`http://127.0.0.1:8000/analyze/${topic}`)
     const result = await response.json();
     setData(result);
+    setIsLoading(false);
     console.log(result);
   }
 
@@ -30,6 +33,7 @@ function App() {
         <button className="search-button" onClick={getSentiment}>➤</button>
       </div>
 
+      {loading && <div className="loading-text"> Loading... </div>}
       {data && (
         <>
           <div className="section bubble-row">
