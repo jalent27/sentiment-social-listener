@@ -276,7 +276,7 @@ def generate_ai_summary(topic, highest_articles, lowest_articles, highest_commen
 
     {examples_text}
 
-    Based on their actual content, explain in 2-3 sentences why the sentiment is trending this way. Be specific about what themes or events in the text are driving the sentiment, rather than restating the score."""
+    Based on their actual content, explain in 2-3 sentences why the sentiment is trending this way. Be specific about what themes or events in the text are driving the sentiment, rather than restating the score. Respond in plain text only, with no markdown formatting, headers, or bold text."""
     
     response = claude_client.messages.create(
         model="claude-haiku-4-5",
