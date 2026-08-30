@@ -19,6 +19,18 @@ function App() {
     console.log(result);
   }
 
+  function getSentimentColor(score: number) {
+    if (score > 0.05) {
+      return "#2d8d32";
+    }
+    else if (score < -0.05) {
+      return "#b52525";
+    }
+    else {
+      return "#444343";
+    }
+  }
+
   return (
     <div className="app-container">
       <h1 className="app-title">SOCIAL SENTIMENT ANALYZER</h1>
@@ -158,7 +170,8 @@ function App() {
             <div className="section-title">All Articles</div>
             <div className="card">
               {data.articles.map((article: any) => (
-                <p key={article.url}>{article.title} - Score: {article.sentiment_score}</p>
+                <p key={article.url} style= {{color: getSentimentColor(article.sentiment_score) }}>
+                  {article.title} - Score: {article.sentiment_score}</p>
               ))}
             </div>
           </div>
@@ -167,7 +180,8 @@ function App() {
             <div className="section-title">All YouTube Comments</div>
             <div className="card">
               {data.youtube_comments.map((yt_comment: any, index: number) => (
-                <p key={index}>{yt_comment.comment} - Score: {yt_comment.score}</p>
+                <p key={index} style= {{color: getSentimentColor(yt_comment.score) }}>
+                  {yt_comment.comment} - Score: {yt_comment.score}</p>
               ))}
             </div>
           </div>
