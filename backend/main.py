@@ -22,7 +22,7 @@ app.add_middleware(
     # it allows requests from the specified origin (http://localhost:3000)... which is the frontend
     # and allows all methods and headers.
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://sentiment-social-listener.vercel.app"],
+    allow_origins=["http://localhost:3000", "https://sentiment-social-listener-omega.vercel.app"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
