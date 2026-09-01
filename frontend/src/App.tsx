@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import {useState} from "react";
-import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, Tooltip, Legend, RadialBarChart, RadialBar } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 
 function App() {
   const [data, setData] = useState<any>(null);
