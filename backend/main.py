@@ -127,7 +127,6 @@ def fetch_youtube_data(topic): #ties together search_videos and fetch_comments
 
     return all_comments
 
-#print(fetch_youtube_data("Lebron")) test
 
 analyzer = SentimentIntensityAnalyzer()
 
@@ -135,7 +134,6 @@ def analyze_sentiment(text): #this function uses vader to analze sentiment of a 
     result = analyzer.polarity_scores(text)
     return result["compound"] #returns the compound score which summarizes overall sentiment
 
-#print(analyze_sentiment("I love kyrie irving hes good at basketball"))
 
 def analyze_comments_sentiment(comments): #this function analyzes sentiment of comments.
     scored_comments = []
@@ -160,7 +158,6 @@ def analyze_articles_sentiment(articles): #this function analyzes sentiment of a
 
 supabase = create_client(supabase_url, supabase_key) #creating a supabase client to connect to the supabase database using the url and key from the .env file
 
-#print(supabase.table("posts").select("*").execute())
 
 def save_to_supabase(topic, content, score):
     #saves the topic, articles, and comments to the supabase database
@@ -176,7 +173,6 @@ def save_to_supabase(topic, content, score):
         print(f"Failed to save to Supabase: {e}")
         return None
 
-#save_to_supabase("test", "is awesome", 0.314)
 
 def calculate_overall_sentiment(articles, comments): #this function calculates overall sentiment scores based on articles and comments.
     scores = []

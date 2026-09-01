@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import {useState} from "react";
 import { BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, Tooltip, Legend, RadialBarChart, RadialBar } from "recharts";
