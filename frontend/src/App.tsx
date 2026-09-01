@@ -11,7 +11,7 @@ function App() {
   async function getSentiment()
   {
     setIsLoading(true);
-    const response = await fetch(`http://127.0.0.1:8000/analyze/${topic}`)
+    const response = await fetch(`https://sentiment-social-listener.onrender.com/analyze/${topic}`)
     const result = await response.json();
     setData(result);
     setIsLoading(false);
